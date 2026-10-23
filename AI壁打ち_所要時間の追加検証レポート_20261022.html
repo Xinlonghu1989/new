@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI壁打ち 追加検証</title>
+<style>
+:root{color-scheme:light;--ink:#1a1a19;--ink2:#52514e;--mute:#8a8984;--rule:#dcdad4;--soft:#f4f3ef;--acc:#046a38;--bg:#fcfcfb;
+  --old:#b9b7b0;--new:#046a38;--c1:#cfd8d2;--c2:#8fc3a6;--c3:#3f9a6a;--c4:#046a38}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",sans-serif;font-size:14.5px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1060px;margin:0 auto;padding:44px 32px 72px}
+header{border-bottom:2px solid var(--acc);padding-bottom:16px;margin-bottom:24px}
+.kicker{color:var(--acc);font-weight:700;letter-spacing:.08em;font-size:12.5px}
+h1{font-size:26px;margin:6px 0 6px;letter-spacing:.02em;line-height:1.4}
+.meta{color:var(--ink2);font-size:13px}
+h2{font-size:18px;margin:40px 0 10px;padding-left:12px;border-left:4px solid var(--acc)}
+h3{font-size:14.5px;margin:22px 0 6px;color:var(--ink)}
+p{margin:8px 0}
+ul{padding-left:1.3em;margin:6px 0}
+li{margin:3px 0}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0 14px}
+.kpi{border:1px solid var(--rule);border-radius:10px;padding:12px 14px;background:#fff}
+.kpi .k{font-size:12px;color:var(--ink2)}
+.kpi .v{font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3;margin-top:2px}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--ink2);margin-left:2px}
+.kpi .d{font-size:12px;color:var(--ink2);margin-top:2px}
+.lead{background:var(--soft);border-radius:10px;padding:16px 22px;margin:8px 0 6px}
+.lead li{margin:5px 0}
+table{border-collapse:collapse;width:100%;margin:8px 0 6px;font-size:13.2px}
+.scroll table{min-width:760px}
+th{text-align:left;font-weight:700;color:var(--ink2);border-bottom:1.5px solid var(--ink);padding:7px 8px;white-space:nowrap;font-size:12.5px}
+td{border-bottom:1px solid var(--rule);padding:7px 8px;vertical-align:top}
+tr.sep td{border-top:1.5px solid var(--ink2)}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.c,th.c{text-align:center}
+.nw{white-space:nowrap}
+.sub{color:var(--ink2)}
+.small{font-size:12.4px;line-height:1.65}
+.note{font-size:12.4px;color:var(--ink2);margin-top:4px}
+.scroll{overflow-x:auto}
+.dp{color:#b4532a;font-size:12px}.dm{color:#1f6f8b;font-size:12px}.dz{color:var(--mute);font-size:12px}
+.pri{display:inline-block;font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.p1{background:var(--acc);color:#fff}.p2{background:#8fc3a6;color:#0d3b25}.p3{background:#e6e4de;color:var(--ink2)}
+/* 図 */
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.6px;margin:8px 0 10px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:10px;border-radius:2px;display:inline-block}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:22px 34px;margin:6px 0 4px}
+.panel{min-width:0}
+.panel h4{margin:0 0 6px;font-size:13.5px;font-weight:700}
+.panel h4 small{font-weight:400;color:var(--ink2);margin-left:6px;font-size:12px}
+.prow{display:grid;grid-template-columns:92px 1fr;align-items:center;height:26px}
+.prow.gap{margin-bottom:10px}
+.prow .lab{font-size:11.8px;text-align:right;padding-right:10px;color:var(--ink2);white-space:nowrap}
+.prow .lab b{color:var(--ink);font-weight:700}
+.bars{display:flex;flex-direction:column;gap:2px;position:relative}
+.bl{display:flex;align-items:center;height:9px}
+.bl i{display:block;height:100%;border-radius:0 3px 3px 0}
+.bl.o i{background:var(--old)}.bl.n i{background:var(--new)}
+.bl em{font-style:normal;font-size:10.8px;color:var(--ink2);margin-left:5px;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1}
+.bl.n em{color:var(--ink);font-weight:700}
+.paxis{display:grid;grid-template-columns:92px 1fr;height:18px;margin-top:4px}
+.paxis div{position:relative;border-top:1px solid var(--rule)}
+.paxis span{position:absolute;top:2px;transform:translateX(-50%);font-size:10.8px;color:var(--mute)}
+.grid{position:relative;margin-left:132px;margin-right:60px}
+.row{display:flex;align-items:center;height:20px;position:relative}
+.row .lab{position:absolute;left:-132px;width:124px;text-align:right;font-size:11.8px;white-space:nowrap;color:var(--ink2)}
+.row .lab b{color:var(--ink)}
+.bar{display:flex;height:12px;flex:none}
+.bar span{height:100%;display:block}
+.bar span+span{box-shadow:inset 1.5px 0 0 var(--bg)}
+.bar span:first-child{border-radius:3px 0 0 3px}.bar span:last-child{border-radius:0 3px 3px 0}
+.row.old .bar{opacity:.45}
+.row .tot{font-size:11.6px;margin-left:7px;color:var(--ink2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.row.gap{margin-bottom:10px}
+.axis{position:relative;height:20px;border-top:1px solid var(--rule);margin-top:4px}
+.axis span{position:absolute;top:2px;transform:translateX(-50%);font-size:11px;color:var(--mute)}
+.gl{position:absolute;top:0;bottom:20px;width:1px;background:#ecebe6}
+.share{display:flex;height:22px;border-radius:5px;overflow:hidden;margin:6px 0 2px}
+.share span{display:flex;align-items:center;justify-content:center;font-size:11.5px;color:#fff;white-space:nowrap;overflow:hidden}
+.share span+span{box-shadow:inset 1.5px 0 0 var(--bg)}
+.share .s1{color:var(--ink)}
+.ingbar{display:flex;height:22px;border-radius:5px;overflow:hidden;margin:8px 0 2px}
+.ingbar span{display:block;height:100%}
+.ingbar span+span{box-shadow:inset 1.5px 0 0 var(--bg)}
+#tip{position:fixed;pointer-events:none;background:#fff;border:1px solid var(--rule);border-radius:8px;padding:8px 11px;font-size:12.3px;box-shadow:0 6px 20px rgba(0,0,0,.12);display:none;z-index:5;line-height:1.6}
+code{font-family:Menlo,Consolas,monospace;font-size:12.2px;background:var(--soft);padding:1px 5px;border-radius:4px}
+footer{margin-top:44px;padding-top:12px;border-top:1px solid var(--rule);font-size:12px;color:var(--ink2)}
+@media (max-width:760px){.wrap{padding:28px 16px 48px}.kpis{grid-template-columns:1fr 1fr}.panels{grid-template-columns:1fr}.grid{margin-left:110px;margin-right:44px}.row .lab{left:-110px;width:102px;font-size:11px}}
+@media print{body{background:#fff}.wrap{padding:0}h2{break-after:avoid}table,.panels,.grid{break-inside:avoid}}
+</style></head>
+<body><div class="wrap">
+<header><div class="kicker">AI経営ナビ｜AIとの壁打ち｜追加検証</div>
+<h1>社内資料を8倍に増やしても、AI壁打ちの待ち時間は変わらない<br><span style="font-size:17px;font-weight:600;color:var(--ink2)">— 時間の本丸は回答生成。資料の量ではなく、答えの長さと外部サイトの読み込みが待ち時間を決めている</span></h1>
+<div class="meta">計測日：2026年10月22日｜対象：gradio_app_1019（最新断面）の複製を手元の Mac で実行｜前回（10/21）と同じ5問 × 普通・ディープの計10問｜比較対象：決算短信の要約PDF 3,093件を追加する前と後</div></header>
+
+<h2>1. 結論</h2>
+<div class="kpis">
+<div class="kpi"><div class="k">社内資料・チャンク</div><div class="v">463 → 3,556<small>件</small></div><div class="d">チャンク 5,759 → 22,570（3.9倍）</div></div>
+<div class="kpi"><div class="k">待ち時間（5問の合計）</div><div class="v">265 → 266<small>秒</small></div><div class="d">普通モード。ディープは 877 → 943秒</div></div>
+<div class="kpi"><div class="k">資料の追加で延びた時間</div><div class="v">+1.5<small>秒／問</small></div><div class="d">内部情報検索だけ。最大でも +2.1秒</div></div>
+<div class="kpi"><div class="k">取り込みにかかった時間</div><div class="v">98.7<small>分</small></div><div class="d">うち 71%が台帳のAI（1,130回）</div></div>
+</div>
+<div class="lead"><ul>
+<li><b>資料を3,093件足しても、利用者の待ち時間は実質変わらなかった。</b>延びたのは索引を引く「内部情報検索」だけで、1問あたり平均 1.3秒 → 2.8秒。合計に占める割合は最大でも 10%。</li>
+<li><b>待ち時間の本丸は回答生成</b>（普通モードの 67%、ディープの 91%）。その長さは資料の量ではなく、<b>答えの長さ</b>（ディープは7千〜1.2万字）で決まる。ディープは「最初の一文字」まで 64〜250秒待つ（問い1を除く）。</li>
+<li><b>2番目の山は外部サイトの読み込み</b>。外部の動向を問うた問い4だけ 44.4秒（普通）・46.2秒（ディープ）。中身は、応答の遅い1サイトの待ち（13秒）と、1ページの画面描画（17秒）。</li>
+<li><b>取り込みは 98.7分で、7割が台帳のAI。</b>資料の種別と期間を読むためにAIを1件ずつ順番に 1,130回呼んだ。埋め込み自体は 20.4分。ここは<b>並列化と規則の拡張で10分台まで縮められる</b>（第5章）。</li>
+</ul></div>
+
+<h2>2. 比較の前提</h2>
+<table><thead><tr><th style="width:30%">項目</th><th>前回（10月21日）</th><th>今回（10月22日）</th></tr></thead><tbody>
+<tr><td>社内資料（HHHD共通）</td><td class=r>463件</td><td class=r><b>3,556件</b>（他社の決算短信の要約PDFを 3,093件追加）</td></tr>
+<tr><td>索引のチャンク総数</td><td class=r>5,759件</td><td class=r><b>22,570件</b>（3.9倍）</td></tr>
+<tr><td>質問・モード</td><td colspan=2>同じ5問を、普通モードとディープモードで1回ずつ（計10問）</td></tr>
+<tr><td>アプリ・AIの設定</td><td colspan=2>同じ最新断面、同じ Mac。思考（thinking）の指定も同じ：質問意図の理解は low、回答生成は普通 low・ディープ medium</td></tr>
+<tr><td>計測の仕方</td><td colspan=2>アプリのコードは変えず、外から各段階の始まりと終わりの時刻を記録。外部ページの読み込みの控えは毎回元に戻す。起動直後の初回の読み込み（約10秒）は含めない</td></tr>
+<tr><td>読み方の注意</td><td colspan=2>各問い1回ずつの計測。回答生成は同じ問いでも回ごとに ±10〜20秒ぶれるため、資料の追加の影響は「内部情報検索」の差で判断する</td></tr>
+</tbody></table>
+<h3>投げた5問（難易度順）</h3>
+<table class=small><tbody><tr><td class=nw><b>1 易</b></td><td>2021年3月期の連結営業収益と営業利益は？（事実の確認）</td><td class='nw sub'>社内資料のみ</td></tr><tr><td class=nw><b>2 やや易</b></td><td>防災体制要綱の大雨時の運転規制の要点は？（社内規程の要約）</td><td class='nw sub'>社内資料のみ</td></tr><tr><td class=nw><b>3 中</b></td><td>都市交通で計画の前提から外れている指標と影響は？（センシングの指標）</td><td class='nw sub'>社内資料のみ</td></tr><tr><td class=nw><b>4 やや難</b></td><td>訪日客の回復がホテル・エンタメ事業に与える影響を外部動向も踏まえて（外部サイトを読む分析）</td><td class='nw sub'>外部サイトを読む</td></tr><tr><td class=nw><b>5 難</b></td><td>2030年に向けた運輸収入の打ち手を3シナリオで詳しく（シナリオ比較）</td><td class='nw sub'>社内資料のみ</td></tr></tbody></table>
+<p class="note">5問とも当社（HHHD）についての問いのため、回答に渡した社内資料16件に、追加した他社の決算短信は1件も入らなかった。渡した資料の顔ぶれは前回とほぼ同じ（16件中の入れ替わり0〜2件）。</p>
+
+<h2>3. 比較：前回 vs 今回</h2>
+<h3>図1　段階ごとの所要時間（秒）— 10問それぞれで前回と今回を並べる</h3>
+<div class="legend"><span><i style="background:var(--old)"></i>前回（チャンク 5,759）</span><span><i style="background:var(--new)"></i>今回（チャンク 22,570）</span><span class=sub>※ 段階ごとに横軸の尺度が違う</span></div>
+<div class="panels" id="panels"></div>
+<p class="note">内部情報検索だけが全問で延びている（右上）。質問意図の理解・回答生成は上下にぶれていて、方向がそろっていない＝資料の追加とは関係しないぶれ。外部情報検索はディープの問い4だけ延びたが、原因は外部サイト側の応答（後述）。</p>
+
+<h3>図2　1問の合計時間と内訳（秒）</h3>
+<div class="legend"><span><i style="background:var(--c1)"></i>質問意図の理解</span><span><i style="background:var(--c2)"></i>内部情報検索</span><span><i style="background:var(--c3)"></i>外部情報検索</span><span><i style="background:var(--c4)"></i>回答生成</span><span class=sub>薄い棒＝前回／濃い棒＝今回</span></div>
+<div id="chart"></div>
+
+<h3>表　4段階の所要時間（秒）：前回 → 今回</h3>
+<div class="scroll"><table><thead><tr><th>モード</th><th>質問</th><th class=r>質問意図の理解</th><th class=r>内部情報検索</th><th class=r>外部情報検索</th><th class=r>回答生成</th><th class=r>合計</th><th class=r>最初の文字まで</th></tr></thead>
+<tbody><tr><td class=nw>普通</td><td class=nw>1 易</td><td class=r>3.7 → <b>3.5</b> <span class=dm>−0.2</span></td><td class=r>0.8 → <b>1.3</b> <span class=dp>+0.5</span></td><td class=r>1.4 → <b>1.5</b> <span class=dp>+0.1</span></td><td class=r>9.0 → <b>5.8</b> <span class=dm>−3.1</span></td><td class=r>14.9 → <b>12.1</b> <span class=dm>−2.8</span></td><td class=r>11.4 → <b>9.5</b></td></tr><tr><td class=nw>普通</td><td class=nw>2 やや易</td><td class=r>3.7 → <b>3.4</b> <span class=dm>−0.3</span></td><td class=r>1.3 → <b>3.1</b> <span class=dp>+1.8</span></td><td class=r>1.0 → <b>4.7</b> <span class=dp>+3.7</span></td><td class=r>25.6 → <b>21.5</b> <span class=dm>−4.0</span></td><td class=r>31.5 → <b>32.8</b> <span class=dp>+1.2</span></td><td class=r>16.3 → <b>18.6</b></td></tr><tr><td class=nw>普通</td><td class=nw>3 中</td><td class=r>4.2 → <b>3.8</b> <span class=dm>−0.4</span></td><td class=r>1.9 → <b>3.9</b> <span class=dp>+2.0</span></td><td class=r>—</td><td class=r>39.9 → <b>31.2</b> <span class=dm>−8.7</span></td><td class=r>46.0 → <b>38.9</b> <span class=dm>−7.1</span></td><td class=r>20.3 → <b>18.9</b></td></tr><tr><td class=nw>普通</td><td class=nw>4 やや難</td><td class=r>5.0 → <b>4.8</b> <span class=dm>−0.2</span></td><td class=r>1.3 → <b>3.4</b> <span class=dp>+2.1</span></td><td class=r>44.7 → <b>44.4</b> <span class=dm>−0.3</span></td><td class=r>56.0 → <b>54.9</b> <span class=dm>−1.2</span></td><td class=r>107.0 → <b>107.5</b> <span class=dp>+0.5</span></td><td class=r>70.3 → <b>68.6</b></td></tr><tr><td class=nw>普通</td><td class=nw>5 難</td><td class=r>4.0 → <b>4.5</b> <span class=dp>+0.5</span></td><td class=r>1.4 → <b>3.2</b> <span class=dp>+1.8</span></td><td class=r>0.6 → <b>1.0</b> <span class=dp>+0.5</span></td><td class=r>59.1 → <b>66.1</b> <span class=dp>+7.0</span></td><td class=r>65.1 → <b>74.9</b> <span class=dp>+9.8</span></td><td class=r>24.1 → <b>31.3</b></td></tr><tr class=sep><td class=nw>ディープ</td><td class=nw>1 易</td><td class=r>3.6 → <b>3.4</b> <span class=dm>−0.2</span></td><td class=r>0.7 → <b>1.1</b> <span class=dp>+0.4</span></td><td class=r>2.8 → <b>2.5</b> <span class=dm>−0.3</span></td><td class=r>11.4 → <b>13.8</b> <span class=dp>+2.4</span></td><td class=r>18.5 → <b>20.8</b> <span class=dp>+2.3</span></td><td class=r>14.8 → <b>17.6</b></td></tr><tr><td class=nw>ディープ</td><td class=nw>2 やや易</td><td class=r>4.0 → <b>3.5</b> <span class=dm>−0.4</span></td><td class=r>1.0 → <b>1.1</b> <span class=dp>+0.1</span></td><td class=r>0.6 → <b>0.4</b> <span class=dm>−0.2</span></td><td class=r>135.2 → <b>137.2</b> <span class=dp>+2.1</span></td><td class=r>140.7 → <b>142.3</b> <span class=dp>+1.6</span></td><td class=r>59.4 → <b>63.8</b></td></tr><tr><td class=nw>ディープ</td><td class=nw>3 中</td><td class=r>4.3 → <b>3.9</b> <span class=dm>−0.4</span></td><td class=r>2.0 → <b>3.8</b> <span class=dp>+1.8</span></td><td class=r>0.0 → <b>0.0</b> <span class=dz>±0</span></td><td class=r>161.5 → <b>182.9</b> <span class=dp>+21.4</span></td><td class=r>167.8 → <b>190.7</b> <span class=dp>+22.8</span></td><td class=r>88.8 → <b>108.9</b></td></tr><tr><td class=nw>ディープ</td><td class=nw>4 やや難</td><td class=r>5.7 → <b>6.4</b> <span class=dp>+0.7</span></td><td class=r>1.3 → <b>3.2</b> <span class=dp>+2.0</span></td><td class=r>24.5 → <b>46.2</b> <span class=dp>+21.7</span></td><td class=r>323.0 → <b>321.6</b> <span class=dm>−1.4</span></td><td class=r>354.4 → <b>377.4</b> <span class=dp>+23.0</span></td><td class=r>228.7 → <b>250.5</b></td></tr><tr><td class=nw>ディープ</td><td class=nw>5 難</td><td class=r>4.3 → <b>4.0</b> <span class=dm>−0.3</span></td><td class=r>1.5 → <b>3.4</b> <span class=dp>+2.0</span></td><td class=r>0.7 → <b>1.1</b> <span class=dp>+0.4</span></td><td class=r>188.7 → <b>203.0</b> <span class=dp>+14.3</span></td><td class=r>195.2 → <b>211.5</b> <span class=dp>+16.4</span></td><td class=r>74.7 → <b>99.2</b></td></tr></tbody></table></div>
+<p class="note">色の数字は差（秒）。質問意図の理解は Opus 5.5・思考 low、回答生成は普通 low／ディープ medium、外部の判定・選択は Haiku 4.5（思考なし）。いずれも前回と同じ。</p>
+
+<h2>4. 示唆</h2>
+<h3>4-1. どの段階で時間がかかるか</h3>
+<div class="legend"><span><i style="background:var(--c1)"></i>質問意図の理解</span><span><i style="background:var(--c2)"></i>内部情報検索</span><span><i style="background:var(--c3)"></i>外部情報検索</span><span><i style="background:var(--c4)"></i>回答生成</span></div>
+<div class="small sub">普通モード（5問の合計 266秒）</div><div class="share"><span class="s1" style="width:7.56%;background:var(--c1)" title="質問意図の理解 7.6%">8%</span><span class="s2" style="width:5.61%;background:var(--c2)" title="内部情報検索 5.6%">6%</span><span class="s3" style="width:19.40%;background:var(--c3)" title="外部情報検索 19.4%">19%</span><span class="s4" style="width:67.43%;background:var(--c4)" title="回答生成 67.4%">回答生成 67%</span></div>
+<div class="small sub" style="margin-top:8px">ディープモード（5問の合計 943秒）</div><div class="share"><span class="s1" style="width:2.26%;background:var(--c1)" title="質問意図の理解 2.3%"></span><span class="s2" style="width:1.35%;background:var(--c2)" title="内部情報検索 1.3%"></span><span class="s3" style="width:5.32%;background:var(--c3)" title="外部情報検索 5.3%">5%</span><span class="s4" style="width:91.07%;background:var(--c4)" title="回答生成 91.1%">回答生成 91%</span></div>
+<ul>
+<li><b>回答生成が本丸。</b>普通で 67%、ディープで 91%。ディープは出力が1万〜2.3万 token（思考を含む）で、本文を書く時間がそのまま待ち時間になる。</li>
+<li><b>質問意図の理解は固定費。</b>易しい問いでも毎回 4秒前後。短い問いほど体感の比率が大きい（問い1では合計の3割）。</li>
+<li><b>外部情報検索は「外部を読むとき」だけ大きい。</b>問い4は約44秒。残りの問いは1〜5秒。</li>
+<li><b>内部情報検索は1〜4秒。</b>索引が約4倍になっても、順位は変わらない。</li>
+</ul>
+
+<h3>4-2. 量を増やして何が変わったか</h3>
+<table><thead><tr><th>処理</th><th class=r>前回</th><th class=r>今回</th><th>見方</th></tr></thead><tbody>
+<tr><td>社内検索（索引から候補を探す）</td><td class=r>0.95秒</td><td class=r><b>1.70秒</b></td><td>チャンク3.9倍で約1.8倍。素直に量に比例して延びている</td></tr>
+<tr><td>前後ページの読み込み</td><td class=r>0.1秒</td><td class=r><b>0.8秒</b></td><td>見つかったページの前後を広く読むようになった分。回答への入力も5千〜8千 token 増えた</td></tr>
+<tr><td>内部情報検索の合計（1問平均）</td><td class=r>1.3秒</td><td class=r><b>2.8秒</b></td><td>合計に占める割合は最大 10%。利用者が差を感じる水準ではない</td></tr>
+<tr><td>回答生成・質問意図の理解</td><td colspan=2 class=c>変わらず（±ぶれ）</td><td>資料を足しても、渡す資料は上位16件に絞られるため入力の量はほぼ同じ</td></tr>
+</tbody></table>
+<p class="note">延長線：社内検索が量に比例するとすれば、チャンク10万件（いまの約4.5倍）でも1問あたり8秒前後。数十万件の規模になる前に、近似近傍検索（ベクトル索引）への切り替えを検討すればよい。</p>
+
+<h3>4-3. 外部情報検索（普通モードの問い4）の44秒の中身</h3>
+<table class=small><thead><tr><th>順</th><th>処理</th><th class=r>秒</th><th>見方</th></tr></thead><tbody>
+<tr><td>1</td><td>外部を読むかの判定（Haiku）</td><td class=r>2.0</td><td rowspan=7 style="vertical-align:middle">44秒のうち30秒が「応答の遅い1サイト」と「1ページの画面描画」。<br>ページの取得自体は並列で、各波は1〜3秒で終わっている。</td></tr>
+<tr><td>2</td><td>一覧ページ5件の取得（並列）</td><td class=r>13.3</td></tr>
+<tr><td>3</td><td>うち1ページをブラウザで画面描画して読み直し</td><td class=r>16.6</td></tr>
+<tr><td>4</td><td>読むページの選択（Haiku）→ 6ページ取得＋3ページ描画</td><td class=r>5.5</td></tr>
+<tr><td>5</td><td>記事本文12件の取得（並列）</td><td class=r>3.0</td></tr>
+<tr><td>6</td><td>追加調査（Haiku）→ 8件取得</td><td class=r>3.6</td></tr>
+<tr><td>7</td><td>見出し記事3件の本文</td><td class=r>0.5</td></tr>
+</tbody></table>
+
+<h2>5. 改善点と改善案</h2>
+<p class="small">アプリは変えていない。効果は今回の計測からの見込み。優先度は「利用者の待ち時間への効き」と「変更の小ささ」で付けた。</p>
+<div class="scroll"><table><thead><tr><th>優先</th><th>対象</th><th>いまの実態</th><th>改善案</th><th>見込める効果</th><th class=c>変更</th></tr></thead><tbody>
+<tr><td><span class="pri p1">1</span></td><td class=nw>回答生成<br><span class=sub small>ディープ</span></td><td>出力1万〜2.3万 token。最初の一文字まで 64〜250秒、画面は無言</td><td>①最初に結論と骨子（10行）を出し、詳細は続けて書く二段構え　②thinking effort を問いの型で使い分ける（指定は今の仕組みで可能）　③出力の上限と構成を型ごとに決める</td><td>体感の待ちを数十秒 → 10〜20秒に。合計も1〜3割短縮</td><td class=c>中</td></tr>
+<tr><td><span class="pri p1">1</span></td><td class=nw>回答生成<br><span class=sub small>入力</span></td><td>1問あたり入力3.5万〜17万 token。資料16件の広いページ範囲（例：2〜80ページ）をそのまま渡す</td><td>渡すページを「当たったページの前後N枚」に絞る。資料ごとの上限も置く</td><td>最初の一文字まで短縮＋費用の削減（入力が最大の費用）</td><td class=c>小</td></tr>
+<tr><td><span class="pri p1">1</span></td><td class=nw>取り込み<br><span class=sub small>台帳のAI</span></td><td>1,130件を1件ずつ順番に呼び 69.6分。対象はすべて「3月期以外（2月期・12月期など）」で、規則が期を読めなかった資料</td><td>①規則で「◯年◯月期」も読む（今は「◯年3月期」だけ）→ AI呼び出しをほぼゼロに　②残る分は4〜8並列で呼ぶ</td><td>98.7分 → 30分前後（①）。規則で読めない資料が残っても、並列で呼べば台帳のAIは10分前後</td><td class=c>小</td></tr>
+<tr><td><span class="pri p2">2</span></td><td class=nw>外部情報検索</td><td>遅い1サイトの待ち13秒、画面描画17秒</td><td>①取得の待ち時間の上限を短く（今は8秒＋再試行）し、遅いサイトは諦めて先に進む　②画面描画は「静的に読めなかったとき」だけに限り、上限を短く　③よく読むサイトは夜間に取り置き</td><td>問い4の44秒 → 15〜20秒</td><td class=c>小</td></tr>
+<tr><td><span class="pri p2">2</span></td><td class=nw>質問意図の理解</td><td>毎回 4秒の固定費（Opus 5.5・low）</td><td>意図の判定と社内検索を同時に走らせる（判定で「検索不要」となった分は捨てる）</td><td>全問で2〜4秒短縮。短い問いほど体感が大きい</td><td class=c>中</td></tr>
+<tr><td><span class="pri p3">3</span></td><td class=nw>取り込み<br><span class=sub small>埋め込み</span></td><td>20.4分（毎秒約13.8チャンク、バッチ8）。読み取りが全部終わるまで始まらない</td><td>バッチを大きくする／読み取りと並行して埋め込む</td><td>数分の短縮。優先度は低い</td><td class=c>小</td></tr>
+<tr><td><span class="pri p3">3</span></td><td class=nw>内部情報検索</td><td>1〜4秒。量に比例して延びる</td><td>いまは手当て不要。チャンク数十万件の規模になる前に近似近傍検索を検討</td><td>—</td><td class=c>—</td></tr>
+</tbody></table></div>
+
+<h2>付録</h2>
+<h3>A. 取り込みの内訳（反映ボタンから埋め込み完了まで 98.7分）</h3>
+<div class="legend"><span><i style="background:#8fc3a6"></i>PDFの読み取り　7.3分（7%）</span><span><i style="background:#046a38"></i>台帳のAI（資料の種別・期間の読み取り）　69.6分（71%）</span><span><i style="background:#3f9a6a"></i>埋め込み（手元のモデル）　20.4分（21%）</span><span><i style="background:#b9b7b0"></i>書き込み・後処理　1.4分（1%）</span></div>
+<div class="ingbar"><span style="width:7.38%;background:#8fc3a6" title="PDFの読み取り 7.3分"></span><span style="width:70.53%;background:#046a38" title="台帳のAI（資料の種別・期間の読み取り） 69.6分"></span><span style="width:20.63%;background:#3f9a6a" title="埋め込み（手元のモデル） 20.4分"></span><span style="width:1.46%;background:#b9b7b0" title="書き込み・後処理 1.4分"></span></div>
+<ul class="small">
+<li>3,093件すべて取り込み済み（読み取りの失敗0件、OCRの対象0件）。1件あたり約5.4チャンク、読み取りは1件 0.14秒。</li>
+<li>台帳のAI：Opus 5.5（思考 low）、1回平均 3.7秒・約2,400 token。1,130回で約270万 token、約2,000〜2,300円（AI壁打ち20〜30問ぶん）。読み取った「対象期間」は検索で年度を絞るときに使われる。</li>
+<li>埋め込み：手元のモデル ruri-v3-30m。16,811チャンクを 20.4分（毎秒約13.8チャンク）。費用はかからない。</li>
+</ul>
+<h3>B. 回答生成の内訳（前回 → 今回）</h3>
+<div class="scroll"><table class=small><thead><tr><th>モード</th><th>質問</th><th class=c>思考</th><th class=r>最初の文字まで（秒）</th><th class=r>回答生成（秒）</th><th class=r>入力 token</th><th class=r>出力 token</th><th class=r>回答の字数</th></tr></thead>
+<tbody><tr><td class=nw>普通</td><td class=nw>1 易</td><td class=c>low</td><td class=r>5.5 → <b>3.2</b></td><td class=r>9.0 → <b>5.8</b></td><td class=r>103,264 → <b>111,304</b></td><td class=r>428 → <b>238</b></td><td class=r>321 → <b>274</b></td></tr><tr><td class=nw>普通</td><td class=nw>2 やや易</td><td class=c>low</td><td class=r>10.4 → <b>7.3</b></td><td class=r>25.6 → <b>21.5</b></td><td class=r>93,919 → <b>100,033</b></td><td class=r>1,639 → <b>1,355</b></td><td class=r>1,279 → <b>1,152</b></td></tr><tr><td class=nw>普通</td><td class=nw>3 中</td><td class=c>low</td><td class=r>14.2 → <b>11.2</b></td><td class=r>39.9 → <b>31.2</b></td><td class=r>35,183 → <b>40,104</b></td><td class=r>2,810 → <b>2,266</b></td><td class=r>2,214 → <b>1,966</b></td></tr><tr><td class=nw>普通</td><td class=nw>4 やや難</td><td class=c>low</td><td class=r>19.3 → <b>15.9</b></td><td class=r>56.0 → <b>54.9</b></td><td class=r>118,630 → <b>116,467</b></td><td class=r>3,440 → <b>3,571</b></td><td class=r>2,800 → <b>3,235</b></td></tr><tr><td class=nw>普通</td><td class=nw>5 難</td><td class=c>low</td><td class=r>18.1 → <b>22.5</b></td><td class=r>59.1 → <b>66.1</b></td><td class=r>60,613 → <b>60,661</b></td><td class=r>4,094 → <b>4,417</b></td><td class=r>3,465 → <b>3,433</b></td></tr><tr class=sep><td class=nw>ディープ</td><td class=nw>1 易</td><td class=c>medium</td><td class=r>7.7 → <b>10.5</b></td><td class=r>11.4 → <b>13.8</b></td><td class=r>108,679 → <b>116,810</b></td><td class=r>619 → <b>667</b></td><td class=r>396 → <b>361</b></td></tr><tr><td class=nw>ディープ</td><td class=nw>2 やや易</td><td class=c>medium</td><td class=r>53.8 → <b>58.8</b></td><td class=r>135.2 → <b>137.2</b></td><td class=r>94,219 → <b>100,334</b></td><td class=r>9,812 → <b>10,294</b></td><td class=r>6,954 → <b>6,725</b></td></tr><tr><td class=nw>ディープ</td><td class=nw>3 中</td><td class=c>medium</td><td class=r>82.5 → <b>101.2</b></td><td class=r>161.5 → <b>182.9</b></td><td class=r>35,389 → <b>40,448</b></td><td class=r>13,061 → <b>14,114</b></td><td class=r>8,232 → <b>8,233</b></td></tr><tr><td class=nw>ディープ</td><td class=nw>4 やや難</td><td class=c>medium</td><td class=r>197.3 → <b>194.6</b></td><td class=r>323.0 → <b>321.6</b></td><td class=r>172,436 → <b>155,365</b></td><td class=r>23,000 → <b>23,000</b></td><td class=r>11,215 → <b>11,786</b></td></tr><tr><td class=nw>ディープ</td><td class=nw>5 難</td><td class=c>medium</td><td class=r>68.2 → <b>90.7</b></td><td class=r>188.7 → <b>203.0</b></td><td class=r>63,344 → <b>66,994</b></td><td class=r>14,391 → <b>14,496</b></td><td class=r>11,095 → <b>9,972</b></td></tr></tbody></table></div>
+<p class="note">回答生成の増減は出力の長さとほぼ連動する（例：ディープ問い3は出力 13,061 → 14,114 token で +21秒、普通問い3は 2,810 → 2,266 token で −9秒）。</p>
+
+<footer>データ：<code>_analysis/AI壁打ち_所要時間の計測_追加検証_20261022/</code>（normal.json・deep.json・compare.json＝計測結果、ingest_summary.json・clock.jsonl＝取り込みの記録、measure.py・launch_with_clock.py＝計測の仕組み）。前回：<code>_analysis/AI壁打ち_所要時間の計測_20261021/</code>。</footer>
+</div>
+<div id="tip" role="tooltip"></div>
+<script>
+const PANELS = {"intent": [{"label": "1 易", "mode": "普通", "old": 3.7, "new": 3.5}, {"label": "2 やや易", "mode": "普通", "old": 3.7, "new": 3.4}, {"label": "3 中", "mode": "普通", "old": 4.2, "new": 3.8}, {"label": "4 やや難", "mode": "普通", "old": 5.0, "new": 4.8}, {"label": "5 難", "mode": "普通", "old": 4.0, "new": 4.5}, {"label": "1 易", "mode": "ディープ", "old": 3.6, "new": 3.4}, {"label": "2 やや易", "mode": "ディープ", "old": 4.0, "new": 3.5}, {"label": "3 中", "mode": "ディープ", "old": 4.3, "new": 3.9}, {"label": "4 やや難", "mode": "ディープ", "old": 5.7, "new": 6.4}, {"label": "5 難", "mode": "ディープ", "old": 4.3, "new": 4.0}], "internal": [{"label": "1 易", "mode": "普通", "old": 0.8, "new": 1.3}, {"label": "2 やや易", "mode": "普通", "old": 1.3, "new": 3.1}, {"label": "3 中", "mode": "普通", "old": 1.9, "new": 3.9}, {"label": "4 やや難", "mode": "普通", "old": 1.3, "new": 3.4}, {"label": "5 難", "mode": "普通", "old": 1.4, "new": 3.2}, {"label": "1 易", "mode": "ディープ", "old": 0.7, "new": 1.1}, {"label": "2 やや易", "mode": "ディープ", "old": 1.0, "new": 1.1}, {"label": "3 中", "mode": "ディープ", "old": 2.0, "new": 3.8}, {"label": "4 やや難", "mode": "ディープ", "old": 1.3, "new": 3.2}, {"label": "5 難", "mode": "ディープ", "old": 1.5, "new": 3.4}], "external": [{"label": "1 易", "mode": "普通", "old": 1.4, "new": 1.5}, {"label": "2 やや易", "mode": "普通", "old": 1.0, "new": 4.7}, {"label": "3 中", "mode": "普通", "old": 0.0, "new": 0.0}, {"label": "4 やや難", "mode": "普通", "old": 44.7, "new": 44.4}, {"label": "5 難", "mode": "普通", "old": 0.6, "new": 1.0}, {"label": "1 易", "mode": "ディープ", "old": 2.8, "new": 2.5}, {"label": "2 やや易", "mode": "ディープ", "old": 0.6, "new": 0.4}, {"label": "3 中", "mode": "ディープ", "old": 0.0, "new": 0.0}, {"label": "4 やや難", "mode": "ディープ", "old": 24.5, "new": 46.2}, {"label": "5 難", "mode": "ディープ", "old": 0.7, "new": 1.1}], "answer": [{"label": "1 易", "mode": "普通", "old": 9.0, "new": 5.8}, {"label": "2 やや易", "mode": "普通", "old": 25.6, "new": 21.5}, {"label": "3 中", "mode": "普通", "old": 39.9, "new": 31.2}, {"label": "4 やや難", "mode": "普通", "old": 56.0, "new": 54.9}, {"label": "5 難", "mode": "普通", "old": 59.1, "new": 66.1}, {"label": "1 易", "mode": "ディープ", "old": 11.4, "new": 13.8}, {"label": "2 やや易", "mode": "ディープ", "old": 135.2, "new": 137.2}, {"label": "3 中", "mode": "ディープ", "old": 161.5, "new": 182.9}, {"label": "4 やや難", "mode": "ディープ", "old": 323.0, "new": 321.6}, {"label": "5 難", "mode": "ディープ", "old": 188.7, "new": 203.0}]};
+const TOTALS = [{"label": "1 易", "mode": "普通", "when": "前回", "intent": 3.7, "internal": 0.8, "external": 1.4, "answer": 9.0, "total": 14.9}, {"label": "1 易", "mode": "普通", "when": "今回", "intent": 3.5, "internal": 1.3, "external": 1.5, "answer": 5.8, "total": 12.12}, {"label": "2 やや易", "mode": "普通", "when": "前回", "intent": 3.7, "internal": 1.3, "external": 1.0, "answer": 25.6, "total": 31.53}, {"label": "2 やや易", "mode": "普通", "when": "今回", "intent": 3.4, "internal": 3.1, "external": 4.7, "answer": 21.5, "total": 32.76}, {"label": "3 中", "mode": "普通", "when": "前回", "intent": 4.2, "internal": 1.9, "external": 0.0, "answer": 39.9, "total": 46.03}, {"label": "3 中", "mode": "普通", "when": "今回", "intent": 3.8, "internal": 3.9, "external": 0.0, "answer": 31.2, "total": 38.9}, {"label": "4 やや難", "mode": "普通", "when": "前回", "intent": 5.0, "internal": 1.3, "external": 44.7, "answer": 56.0, "total": 107.05}, {"label": "4 やや難", "mode": "普通", "when": "今回", "intent": 4.8, "internal": 3.4, "external": 44.4, "answer": 54.9, "total": 107.51}, {"label": "5 難", "mode": "普通", "when": "前回", "intent": 4.0, "internal": 1.4, "external": 0.6, "answer": 59.1, "total": 65.14}, {"label": "5 難", "mode": "普通", "when": "今回", "intent": 4.5, "internal": 3.2, "external": 1.0, "answer": 66.1, "total": 74.89}, {"label": "1 易", "mode": "ディープ", "when": "前回", "intent": 3.6, "internal": 0.7, "external": 2.8, "answer": 11.4, "total": 18.5}, {"label": "1 易", "mode": "ディープ", "when": "今回", "intent": 3.4, "internal": 1.1, "external": 2.5, "answer": 13.8, "total": 20.82}, {"label": "2 やや易", "mode": "ディープ", "when": "前回", "intent": 4.0, "internal": 1.0, "external": 0.6, "answer": 135.2, "total": 140.7}, {"label": "2 やや易", "mode": "ディープ", "when": "今回", "intent": 3.5, "internal": 1.1, "external": 0.4, "answer": 137.2, "total": 142.29}, {"label": "3 中", "mode": "ディープ", "when": "前回", "intent": 4.3, "internal": 2.0, "external": 0.0, "answer": 161.5, "total": 167.83}, {"label": "3 中", "mode": "ディープ", "when": "今回", "intent": 3.9, "internal": 3.8, "external": 0.0, "answer": 182.9, "total": 190.67}, {"label": "4 やや難", "mode": "ディープ", "when": "前回", "intent": 5.7, "internal": 1.3, "external": 24.5, "answer": 323.0, "total": 354.44}, {"label": "4 やや難", "mode": "ディープ", "when": "今回", "intent": 6.4, "internal": 3.2, "external": 46.2, "answer": 321.6, "total": 377.42}, {"label": "5 難", "mode": "ディープ", "when": "前回", "intent": 4.3, "internal": 1.5, "external": 0.7, "answer": 188.7, "total": 195.16}, {"label": "5 難", "mode": "ディープ", "when": "今回", "intent": 4.0, "internal": 3.4, "external": 1.1, "answer": 203.0, "total": 211.54}];
+const STAGES = [["intent","質問意図の理解","var(--c1)"],["internal","内部情報検索","var(--c2)"],["external","外部情報検索","var(--c3)"],["answer","回答生成","var(--c4)"]];
+const tip = document.getElementById("tip");
+function showTip(e, html){ tip.innerHTML = html; tip.style.display = "block"; tip.style.left = Math.min(e.clientX + 14, window.innerWidth - 240) + "px"; tip.style.top = (e.clientY + 14) + "px"; }
+// 図1：段階別パネル
+const panels = document.getElementById("panels");
+STAGES.forEach(s => {
+  const rows = PANELS[s[0]]; const max = Math.max(...rows.map(r => Math.max(r.old, r.new))) * 1.18 || 1;
+  const p = document.createElement("div"); p.className = "panel";
+  const avgOld = rows.reduce((a, r) => a + r.old, 0) / rows.length, avgNew = rows.reduce((a, r) => a + r.new, 0) / rows.length;
+  p.innerHTML = `<h4>${s[1]}<small>平均 ${avgOld.toFixed(1)} → ${avgNew.toFixed(1)}秒</small></h4>`;
+  rows.forEach((r, i) => {
+    const row = document.createElement("div"); row.className = "prow" + (i === 4 ? " gap" : "");
+    const lab = i < 5 ? `<b>${r.label}</b>` : r.label;
+    row.innerHTML = `<div class="lab">${lab}<span class="sub" style="font-size:10.5px"> ${r.mode}</span></div><div class="bars">
+      <div class="bl o"><i style="width:${r.old / max * 100}%"></i><em>${r.old ? r.old.toFixed(1) : "—"}</em></div>
+      <div class="bl n"><i style="width:${r.new / max * 100}%"></i><em>${r.new ? r.new.toFixed(1) : "—"}</em></div></div>`;
+    row.addEventListener("mousemove", e => showTip(e, `<b>${r.label}｜${r.mode}モード</b><br>${s[1]}：前回 ${r.old.toFixed(1)}秒 → 今回 ${r.new.toFixed(1)}秒`));
+    row.addEventListener("mouseleave", () => tip.style.display = "none");
+    p.appendChild(row);
+  });
+  const ax = document.createElement("div"); ax.className = "paxis"; const inner = document.createElement("div");
+  const step = max > 200 ? 100 : max > 60 ? 30 : max > 20 ? 10 : max > 6 ? 2 : max > 3 ? 1 : 0.5;
+  for (let t = 0; t <= max; t += step) { const sp = document.createElement("span"); sp.style.left = (t / max * 100) + "%"; sp.textContent = t; inner.appendChild(sp); }
+  ax.appendChild(document.createElement("div")); ax.appendChild(inner); p.appendChild(ax);
+  panels.appendChild(p);
+});
+// 図2：合計の積み上げ
+const MAX = 390, root = document.getElementById("chart");
+const grid = document.createElement("div"); grid.className = "grid"; root.appendChild(grid);
+for (let t = 60; t <= MAX; t += 60) { const g = document.createElement("div"); g.className = "gl"; g.style.left = (t / MAX * 100) + "%"; grid.appendChild(g); }
+TOTALS.forEach(d => {
+  const row = document.createElement("div"); row.className = "row" + (d.when === "前回" ? " old" : " gap");
+  row.innerHTML = `<div class="lab">${d.when === "前回" ? "<b>" + d.label + "</b> " + d.mode + " " : ""}<span style="font-size:10.8px">${d.when}</span></div>`;
+  const bar = document.createElement("div"); bar.className = "bar";
+  STAGES.forEach(s => { if (d[s[0]] > 0) { const sp = document.createElement("span"); sp.style.width = (d[s[0]] / d.total * 100) + "%"; sp.style.flex = "none"; sp.style.background = s[2]; bar.appendChild(sp); } });
+  bar.style.width = (d.total / MAX * 100) + "%"; row.appendChild(bar);
+  const tot = document.createElement("div"); tot.className = "tot"; tot.textContent = d.total.toFixed(1) + "秒"; row.appendChild(tot);
+  row.addEventListener("mousemove", e => showTip(e, `<b>${d.label}｜${d.mode}モード｜${d.when}</b><br>` + STAGES.map(s => `${s[1]}：${d[s[0]].toFixed(1)}秒`).join("<br>") + `<br>合計：${d.total.toFixed(1)}秒`));
+  row.addEventListener("mouseleave", () => tip.style.display = "none");
+  grid.appendChild(row);
+});
+const axis = document.createElement("div"); axis.className = "axis";
+for (let t = 0; t <= MAX; t += 120) { const a = document.createElement("span"); a.style.left = (t / MAX * 100) + "%"; a.textContent = t + "秒"; axis.appendChild(a); }
+grid.appendChild(axis);
+</script>
+</body></html>
